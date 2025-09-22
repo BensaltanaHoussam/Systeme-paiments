@@ -1,4 +1,6 @@
 package entities;
+import enums.StatutAbonnement;
 
-public class AbonnementSansEngagement {
+public class AbonnementSansEngagement extends Abonnement {
+
 }
