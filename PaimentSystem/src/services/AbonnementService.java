@@ -60,5 +60,32 @@ public class AbonnementService {
         return s == null || s.trim().isEmpty();
     }
 
+    // API Service
+    public Abonnement create(Abonnement a) throws SQLException {
+        validateForCreate(a);
+        return abonnementDAO.create(a);
+    }
 
+    public Optional<Abonnement> findById(String id) throws SQLException {
+        if (isBlank(id)) throw new IllegalArgumentException("id obligatoire");
+        return abonnementDAO.findById(id);
+    }
+
+    public List<Abonnement> findAll() throws SQLException {
+        return abonnementDAO.findAll();
+    }
+
+    public boolean update(Abonnement a) throws SQLException {
+        validateForUpdate(a);
+        return abonnementDAO.update(a);
+    }
+
+    public boolean delete(String id) throws SQLException {
+        if (isBlank(id)) throw new IllegalArgumentException("id obligatoire");
+        return abonnementDAO.delete(id);
+    }
+
+    public List<Abonnement> findActiveSubscriptions() throws SQLException {
+        return abonnementDAO.findActiveSubscriptions();
+    }
 }
