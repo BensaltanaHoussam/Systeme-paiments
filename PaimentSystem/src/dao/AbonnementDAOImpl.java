@@ -147,7 +147,45 @@ public class AbonnementDAOImpl implements AbonnementDAOI {
         }
     }
 
+    @Override
+    public List<Abonnement> findActiveSubscriptions() throws SQLException {
+        try (Connection cn = DBConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(SQL_FIND_ACTIVE);
+             ResultSet rs = ps.executeQuery()) {
 
+            List<Abonnement> list = new ArrayList<>();
+            while (rs.next()) {
+                list.add(map(rs));
+            }
+            return list;
+        }
+    }
 
+    private Abonnement map(ResultSet rs) throws SQLException {
+        String id = rs.getString("id");
+        String nomService = rs.getString("nomService");
 
+        BigDecimal montant = rs.getBigDecimal("montantMensuel");
+        if (montant == null) montant = BigDecimal.ZERO;
+
+        Date dDebut = rs.getDate("dateDebut");
+        Date dFin = rs.getDate("dateFin");
+        LocalDate dateDebut = (dDebut != null) ? dDebut.toLocalDate() : null;
+        LocalDate dateFin = (dFin != null) ? dFin.toLocalDate() : null;
+
+        String statutStr = rs.getString("statut");
+        StatutAbonnement statut = (statutStr != null) ? StatutAbonnement.valueOf(statutStr) : null;
+
+        String type = rs.getString("typeAbonnement");
+        Abonnement a;
+        if ("AVEC_ENGAGEMENT".equalsIgnoreCase(type)) {
+            int duree = rs.getInt("dureeEngagementMois");
+            if (rs.wasNull()) duree = 0; // fallback si la colonne est NULL
+            a = new AbonnementAvecEngagement(nomService, montant, dateDebut, dateFin, statut, duree);
+        } else {
+            a = new AbonnementSansEngagement(nomService, montant, dateDebut, dateFin, statut);
+        }
+        a.setId(id);
+        return a;
+    }
 }
