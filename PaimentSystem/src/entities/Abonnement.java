@@ -1,26 +1,40 @@
+// java
 package entities;
+
 import enums.StatutAbonnement;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
 public abstract class Abonnement {
 
-    private String id ;
-    private String nomService ;
-    private double montantMensuel ;
-    private LocalDate dateDebut ;
-    private LocalDate dateFin ;
-    private StatutAbonnement status ;
+    private String id;
+    private String nomService;
+    private BigDecimal montantMensuel;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
+    private StatutAbonnement statut;
 
-
-    public Abonnement ( String nomService, double montantMensuel, LocalDate dateDebut, LocalDate dateFin, StatutAbonnement status) {
+    protected Abonnement(String nomService,
+                         BigDecimal montantMensuel,
+                         LocalDate dateDebut,
+                         LocalDate dateFin,
+                         StatutAbonnement statut) {
         this.id = UUID.randomUUID().toString();
         this.nomService = nomService;
         this.montantMensuel = montantMensuel;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
-        this.status = status;
+        this.statut = statut;
+    }
+
+    protected Abonnement(String nomService,
+                         double montantMensuel,
+                         LocalDate dateDebut,
+                         LocalDate dateFin,
+                         StatutAbonnement statut) {
+        this(nomService, BigDecimal.valueOf(montantMensuel), dateDebut, dateFin, statut);
     }
 
     public String getId() {
@@ -39,11 +53,11 @@ public abstract class Abonnement {
         this.nomService = nomService;
     }
 
-    public double getMontantMensuel() {
+    public BigDecimal getMontantMensuel() {
         return montantMensuel;
     }
 
-    public void setMontantMensuel(double montantMensuel) {
+    public void setMontantMensuel(BigDecimal montantMensuel) {
         this.montantMensuel = montantMensuel;
     }
 
@@ -63,11 +77,33 @@ public abstract class Abonnement {
         this.dateFin = dateFin;
     }
 
-    public StatutAbonnement getStatus() {
-        return status;
+    public StatutAbonnement getStatut() {
+        return statut;
     }
 
-    public void setStatus(StatutAbonnement status) {
-        this.status = status;
+    public void setStatut(StatutAbonnement statut) {
+        this.statut = statut;
+    }
+
+    // Alias de compatibilité
+    public StatutAbonnement getStatus() {
+        return getStatut();
+    }
+
+    public void setStatus(StatutAbonnement statut) {
+        setStatut(statut);
+    }
+
+    // Champs "virtuels"
+    public String getTypeAbonnement() {
+        return (this instanceof AbonnementAvecEngagement) ? "AVEC_ENGAGEMENT" : "SANS_ENGAGEMENT";
+    }
+
+    public Integer getDureeEngagementMois() {
+        if (this instanceof AbonnementAvecEngagement) {
+            AbonnementAvecEngagement a = (AbonnementAvecEngagement) this;
+            return a.getDureeEngagementMois();
+        }
+        return null;
     }
 }
