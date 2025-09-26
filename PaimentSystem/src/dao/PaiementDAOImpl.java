@@ -43,4 +43,27 @@ public class PaiementDAOImpl implements PaiementDAOI {
         }
     }
 
+    @Override
+    public Optional<Paiement> findById(String idPaiement) throws SQLException {
+        try (Connection cn = DBConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(SQL_SELECT_ID)) {
+            ps.setString(1, idPaiement);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(map(rs));
+                return Optional.empty();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }
