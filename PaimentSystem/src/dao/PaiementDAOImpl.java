@@ -143,5 +143,16 @@ public class PaiementDAOImpl implements PaiementDAOI {
         }
     }
 
-
+    private Paiement map(ResultSet rs) throws SQLException {
+        String id = rs.getString("idPaiement");
+        String abo = rs.getString("idAbonnement");
+        LocalDate echeance = rs.getDate("dateEcheance").toLocalDate();
+        Date dPay = rs.getDate("datePaiement");
+        LocalDate pay = dPay != null ? dPay.toLocalDate() : null;
+        String type = rs.getString("typePaiement");
+        StatutPaiement statut = StatutPaiement.valueOf(rs.getString("statut"));
+        Paiement p = new Paiement(abo, echeance, pay, type, statut);
+        p.setIdPaiement(id);
+        return p;
+    }
 }
