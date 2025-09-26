@@ -68,6 +68,16 @@ public class PaiementDAOImpl implements PaiementDAOI {
         }
     }
 
+    @Override
+    public List<Paiement> findAll() throws SQLException {
+        try (Connection cn = DBConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(SQL_SELECT_ALL);
+             ResultSet rs = ps.executeQuery()) {
+            List<Paiement> list = new ArrayList<>();
+            while (rs.next()) list.add(map(rs));
+            return list;
+        }
+    }
 
 
 
