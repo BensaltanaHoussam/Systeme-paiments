@@ -30,10 +30,6 @@ public final class DBConnection {
             user = props.getProperty("db.user");
             password = props.getProperty("db.password");
 
-            System.out.println("[DBConnection] db.properties chargé depuis: " + locatedAt);
-            System.out.println("[DBConnection] db.url=" + url);
-            System.out.println("[DBConnection] db.user=" + user);
-
             if (url == null || user == null) {
                 throw new IllegalStateException("Propriétés db.url et db.user obligatoires.");
             }
