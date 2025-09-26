@@ -116,7 +116,18 @@ public class PaiementDAOImpl implements PaiementDAOI {
         }
     }
 
-
+    @Override
+    public List<Paiement> findLastPayments(int limit) throws SQLException {
+        try (Connection cn = DBConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(SQL_LAST)) {
+            ps.setInt(1, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Paiement> list = new ArrayList<>();
+                while (rs.next()) list.add(map(rs));
+                return list;
+            }
+        }
+    }
 
 
 
