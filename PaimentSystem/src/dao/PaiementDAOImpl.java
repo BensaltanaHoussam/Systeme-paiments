@@ -129,7 +129,19 @@ public class PaiementDAOImpl implements PaiementDAOI {
         }
     }
 
-
+    @Override
+    public List<Paiement> findBetweenDueDates(LocalDate start, LocalDate end) throws SQLException {
+        try (Connection cn = DBConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(SQL_BETWEEN_DUE)) {
+            ps.setDate(1, Date.valueOf(start));
+            ps.setDate(2, Date.valueOf(end));
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Paiement> list = new ArrayList<>();
+                while (rs.next()) list.add(map(rs));
+                return list;
+            }
+        }
+    }
 
 
 }
