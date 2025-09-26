@@ -55,7 +55,18 @@ public class PaiementDAOImpl implements PaiementDAOI {
         }
     }
 
-
+    @Override
+    public List<Paiement> findByAbonnement(String idAbonnement) throws SQLException {
+        try (Connection cn = DBConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(SQL_SELECT_ABO)) {
+            ps.setString(1, idAbonnement);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Paiement> list = new ArrayList<>();
+                while (rs.next()) list.add(map(rs));
+                return list;
+            }
+        }
+    }
 
 
 
