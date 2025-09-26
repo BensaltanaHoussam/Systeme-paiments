@@ -94,6 +94,14 @@ public class PaiementDAOImpl implements PaiementDAOI {
         }
     }
 
+    @Override
+    public boolean delete(String idPaiement) throws SQLException {
+        try (Connection cn = DBConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(SQL_DELETE)) {
+            ps.setString(1, idPaiement);
+            return ps.executeUpdate() > 0;
+        }
+    }
 
 
 
