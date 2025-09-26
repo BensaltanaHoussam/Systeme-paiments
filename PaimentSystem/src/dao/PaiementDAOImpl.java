@@ -79,6 +79,20 @@ public class PaiementDAOImpl implements PaiementDAOI {
         }
     }
 
+    @Override
+    public boolean update(Paiement p) throws SQLException {
+        try (Connection cn = DBConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(SQL_UPDATE)) {
+            ps.setString(1, p.getIdAbonnement());
+            ps.setDate(2, Date.valueOf(p.getDateEcheance()));
+            if (p.getDatePaiement() != null) ps.setDate(3, Date.valueOf(p.getDatePaiement()));
+            else ps.setNull(3, Types.DATE);
+            ps.setString(4, p.getTypePaiement());
+            ps.setString(5, p.getStatut().name());
+            ps.setString(6, p.getIdPaiement());
+            return ps.executeUpdate() > 0;
+        }
+    }
 
 
 
